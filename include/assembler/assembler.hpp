@@ -14,7 +14,7 @@ namespace gemma {
     class Assembler {
       Parser parser;
     public:
-      Assembler() = default;
+      Assembler( Parser p ): parser( p ) {};
 
       Parser& getParser(){ return this->parser; }
       Assembler* setParser( Parser p ){ this->parser = p; return this; }
