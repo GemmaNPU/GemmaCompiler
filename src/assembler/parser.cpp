@@ -1,4 +1,5 @@
 #include <vector>
+#include <memory>
 #include "instructions.hpp"
 #include "assembler/parser.hpp"
 #include "assembler/instruction_builders.hpp"

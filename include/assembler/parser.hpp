@@ -2,6 +2,7 @@
 #define GEMMA_ASSEMBLER_PARSER_HPP
 
 #include <vector>
+#include <memory>  
 #include "assembler/lexer.hpp"
 #include "assembler/instruction_builders.hpp"
 #include "instructions.hpp"
