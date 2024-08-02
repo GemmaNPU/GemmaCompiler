@@ -1,4 +1,4 @@
-# Gemmma Assembler
+# Gemma Assembler
 This is just an alpha version of a compiler for the GemmaTPU project
 
 # Contributing

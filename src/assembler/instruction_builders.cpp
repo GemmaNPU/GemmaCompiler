@@ -157,7 +157,7 @@ namespace gemma{
     result::Result<GemmaInstruction, std::string> HaltInstructionBuilder::build( std::vector<gemma::assembler::Token> args ){
         GemmaInstruction instruction;
         if ( args.size() == 0 ){
-          return result::Ok( instruction.setOpcode( CON_OPCODE ) ) ;
+          return result::Ok( instruction.setOpcode( HLT_OPCODE ) ) ;
         }
         return result::Err( std::string("HLT instruction doesn't expects any argument") );
       }
