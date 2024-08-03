@@ -104,7 +104,7 @@ namespace details {
 
 inline void terminate(const std::string_view& msg) {
     std::cerr << msg << std::endl;
-    std::terminate();
+    std::abort();
 }
 
 template <typename T, typename E>
