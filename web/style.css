@@ -1,0 +1,200 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  color: white;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  /* overflow: hidden; */
+  background: #212121;
+  position: relative;
+}
+
+.form {
+  width: 100vw;
+  height: 64px;
+  padding: 0 12px;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+}
+.form > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 8px;
+  justify-content: center;
+  align-items: center;
+}
+#upload-file {
+  background: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.file-upload-dialog-content {
+  display: flex;
+  height: 40vh;
+  gap: 24px;
+}
+.file-upload-dialog-content > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: solid 4px #1976d2;
+  padding: 8px;
+  width: 15vw;
+  border-radius: 12px;
+}
+.file-upload-dialog-content > div label {
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+}
+.file-upload-dialog-content > div input {
+  display: none;
+}
+
+.main {
+  height: calc(100vh - 64px);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.main > div {
+  height: 50%;
+  overflow-y: auto;
+  background: #212121;
+  display: flex;
+}
+#instruction-container{
+  background: #212121;
+  color: white;
+  flex-grow: 1;
+  border-left: solid 4px #333;
+  font-size: 12px;
+  font-family: "Courier Prime", monospace !important;
+}
+#hex-container{ 
+  font-size: 12px;
+  display: flex;
+  width: 465px;
+  padding-right: 10px;
+}
+#hex-container > .rows {
+  display: none;
+  height: 100%;
+  background: #282828;
+  padding: 0 12px;
+  font-family: "Courier Prime", monospace !important;
+}
+#hex-container > .rows > * {
+  padding: 4px 0;
+  font-family: "Courier Prime", monospace !important;
+}
+
+.floating-fab {
+  position: absolute;
+  bottom: 36px;
+  right: 36px;
+  width: 48px;
+  height: 48px;
+  background: #1976d2;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+#hex-text {
+  width: auto; 
+  flex-grow: 1;
+}
+.hex-value {
+  font-family: "Courier Prime", monospace !important;
+  padding: 4px;
+  display: inline-block;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+}
+.hex-value.focus {
+  text-decoration: underline;
+}
+
+#text {
+  width:100%;
+}
+#text code {
+  display: block;
+  padding: 2px 0 2px 8px;
+  transition: background 500ms;
+  cursor: pointer;
+  user-select: all;
+}
+#text code.focus, #text code:hover {
+  background: #1976d2;
+}
+#text code:hover {
+  padding-left: 4px;
+  border-left: solid 4px #1976d2;
+}
+
+
+dialog::backdrop {
+  background-color: #222;
+  opacity: 0.75;
+}
+dialog {
+  background-color: #333;
+  border: solid 2px #333;
+  border-radius: 8px;
+}
+#bug-description-textarea {
+  width: 40vw;
+  height: 30vh;
+  border: solid 1px #1976d2;
+  outline: none;
+  border-radius: 8px;
+  background: transparent;
+}
+dialog button {
+  background: #555; 
+  padding: 8px; 
+  border: none; 
+  border-radius: 8px;
+}
+#submit-bug {
+  background: #1976d2;
+}
+
+
+/* Tablets and bigger */
+@media only screen and (min-width: 600px) {
+  .main {
+    flex-direction: row;
+  }
+  .main > div {
+    height: 100%; 
+  }
+  #hex-container > .rows {
+    display: block;
+  }
+}
+
+/* Desktop only */
+@media only screen and (min-width: 992px) {
+  
+}

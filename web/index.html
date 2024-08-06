@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemma Assembler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/solid.min.css" integrity="sha512-/r+0SvLvMMSIf41xiuy19aNkXxI+3zb/BN8K9lnDDWI09VM0dwgTMzK7Qi5vv5macJ3VH4XZXr60ip7v13QnmQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" integrity="sha512-B46MVOJpI6RBsdcU307elYeStF2JKT87SsHZfRSkjVi4/iZ3912zXi45X5/CBr/GbCyLx6M1GQtTKYRd52Jxgw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/regular.min.css" integrity="sha512-j+P0XpTXw+hDTK64xqC/cjv62cf629/IR4/0bokmich7J8XdVlWT40+1M/Z58rCQ4F+3QoJIfzh6Ui6TTIP6WQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" integrity="sha512-EJp8vMVhYl7tBFE2rgNGb//drnr1+6XKMvTyamMS34YwOEFohhWkGq13tPWnK0FbjSS6D8YoA3n3bZmb3KiUYA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>    
+    <div class="form">
+        <div>
+            <button id="upload-file" onclick="document.getElementById('file-upload-dialog').showModal()">Upload file</button>
+            <dialog id="file-upload-dialog">
+                <div style="padding: 12px; display: flex; justify-content: end;">
+                    <div style="user-select: none; cursor: pointer; font-size: 20px; color: #777" onclick="document.getElementById('file-upload-dialog').close()">&times;</div>
+                </div>
+                <div class="file-upload-dialog-content">
+                    <div id="text-drop-area" ondrop="window.dropTextHandler(event);" ondragover="window.dragOverHandler(event);">
+                        <label for="text-file-input">Upload an assembly file <br/> 
+                            <i class="fas fa-2x fa-upload" style="padding-top: 12px;"></i>
+                        </label>
+                        <input id="text-file-input" type="file"/>
+                    </div>
+                    <div id="hex-drop-area" ondrop="window.dropHexHandler(event);" ondragover="window.dragOverHandler(event);">
+                        <label for="hex-file-input">Upload a binary file <br/> 
+                            <i class="fas fa-2x fa-upload" style="padding-top: 12px;"></i>
+                        </label>
+                        <input id="hex-file-input" type="file"/>
+                    </div>
+                </div>
+            </dialog>
+        </div>
+        <div>
+            <a href="#"><i class="fab fa-github fa-2x"></i></a>
+        </div>
+    </div>
+
+    <div class="main">
+        <div id="hex-container">
+            <div class="rows" id="address-container"></div>
+            <div id="hex-text"></div>
+        </div>
+        <div id="instruction-container">
+            <div id="text"></div>
+        </div>
+    </div>
+    
+    <dialog id="bug-report-dialog">
+        <form method="dialog">
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 12px;">
+                Please tell us what bug you encountered:
+                <textarea name="bug-description" id="bug-description-textarea"></textarea>
+                <div>
+                    <input id="bug-more-data-checkbox" type="checkbox" checked />
+                    <span>Send additional automatically captured data such as input and hex values, browser information, etc...</span>
+                </div>
+                <div style="display: flex; gap: 24px">
+                    <button onclick="document.getElementById('bug-report-dialog').close()">Close</button>
+                    <button type="submit" id="submit-bug">Send (thanks)</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+    <div class="floating-fab" onclick="document.getElementById('bug-report-dialog').showModal()">
+        <i class="fas fa-bug"></i>
+    </div>
+      
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+    <script src="script.js" type="module"></script>
+    <script src="wasm.js"></script>
+</body>
+</html>

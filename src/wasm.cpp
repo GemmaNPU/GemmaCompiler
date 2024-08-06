@@ -9,6 +9,8 @@
 #include <string>
 #include <sstream>
 
+static std::string assemble_result;
+
 extern "C" 
 {
     EMSCRIPTEN_KEEPALIVE export const char* assemble(char* instructions)
@@ -20,9 +22,9 @@ extern "C"
 
         auto result = assembler.assemble();
         for( auto i: result ){
-            gemma::fmt_instruction_hex( stream, i);
+            gemma::fmt_instruction_bin( stream, i);
         }
-        const std::string str = stream.str();
-        return str.c_str();
+        assemble_result = stream.str();
+        return assemble_result.c_str();
     }
 }
