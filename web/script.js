@@ -58,8 +58,8 @@ class Program {
 
     static fromText( str ){
         let text = str.split('\n')
-        console.log( str );
-        let hex = text.map( instruction => assemble(instruction) );
+        let hex = text.filter(t => t != "")
+                      .map( instruction => assemble(instruction) );
         let map = new Map();
         for(let i = 0; i < text.length; i++){
             map.set(i, {hex: hex[i], text: text[i], mnemonic: text[i].split(' ')[0]});
