@@ -8,13 +8,14 @@
 #include <optional>
 #include <functional>
 #include <charconv>
+#include <cstdint>
 
 #include "assembler/lexer.hpp"
 #include "instructions/instruction.hpp"
 #include "instructions/flag.hpp"
 
 using BuilderReturnType = std::variant<gemma::Instruction, std::string>;
-using Builder = BuilderReturnType (*)( std::optional<std::string_view>, std::array< std::optional<u_int64_t>, 3>);
+using Builder = BuilderReturnType (*)( std::optional<std::string_view>, std::array< std::optional<uint64_t>, 3>);
 using Menomic = std::string;
 
 namespace gemma {

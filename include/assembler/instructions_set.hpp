@@ -39,7 +39,7 @@ namespace gemma {
      * Register the instruction 'NOP'. This instruction requires neither flags nor arguments, so it returns an error if those are provided.
      */
       static void registerInstructions( Parser& parser ) noexcept {
-        parser.addInstructionBuilder( "NOP", []( std::optional<std::string_view> flag , std::array<std::optional<u_int64_t>, 3> args ){
+        parser.addInstructionBuilder( "NOP", []( std::optional<std::string_view> flag , std::array<std::optional<uint64_t>, 3> args ){
             ERROR_IF_FLAG( flag )
             ERROR_IF_ARGS( args )
             Instruction nop;
@@ -58,7 +58,7 @@ namespace gemma {
      * Register the instruction 'NOP'. This instruction requires neither flags nor arguments, so it returns an error if those are provided.
      */
       static void registerInstructions( Parser& parser ) noexcept {
-        parser.addInstructionBuilder( "HALT", []( std::optional<std::string_view> flag, std::array<std::optional<u_int64_t>, 3> args){
+        parser.addInstructionBuilder( "HALT", []( std::optional<std::string_view> flag, std::array<std::optional<uint64_t>, 3> args){
             ERROR_IF_FLAG( flag )
             ERROR_IF_ARGS( args )
             Instruction hlt;
@@ -76,7 +76,7 @@ namespace gemma {
      * Register the instruction 'READ'. This instruction requires all 3 arguments, but no flags. 
      */
       static void registerInstructions( Parser& parser ) noexcept {
-        parser.addInstructionBuilder( "READ", []( std::optional<std::string_view> flag, std::array<std::optional<u_int64_t>, 3> args){
+        parser.addInstructionBuilder( "READ", []( std::optional<std::string_view> flag, std::array<std::optional<uint64_t>, 3> args){
             ERROR_IF_FLAG( flag )
             Instruction rhm;
             rhm.setOpcode( OPCODES::RHM );
@@ -108,7 +108,7 @@ namespace gemma {
      * Register the instruction 'WRITE'. This instruction requires all 3 arguments, but no flags. 
      */
       static void registerInstructions( Parser& parser ) noexcept {
-        parser.addInstructionBuilder( "WRITE", []( std::optional<std::string_view> flag, std::array<std::optional<u_int64_t>, 3> args){
+        parser.addInstructionBuilder( "WRITE", []( std::optional<std::string_view> flag, std::array<std::optional<uint64_t>, 3> args){
             ERROR_IF_FLAG( flag )
             Instruction whm;
             whm.setOpcode( OPCODES::WHM );
@@ -140,7 +140,7 @@ namespace gemma {
      * Register the instruction 'MULTIPLY'. This instruction requires all 3 arguments, but no flags. 
      */
       static void registerInstructions( Parser& parser ) noexcept {
-        parser.addInstructionBuilder( "MULTIPLY", []( std::optional<std::string_view> flag, std::array<std::optional<u_int64_t>, 3> args){
+        parser.addInstructionBuilder( "MULTIPLY", []( std::optional<std::string_view> flag, std::array<std::optional<uint64_t>, 3> args){
             ERROR_IF_FLAG( flag )
             Instruction mm;
             mm.setOpcode( OPCODES::MM );
@@ -172,7 +172,7 @@ namespace gemma {
      * Register the instruction 'ACTIVATE'. This instruction requires all 3 arguments, and a flag (opions are RELU, SIGMOID). 
      */
       static void registerInstructions( Parser& parser ) noexcept {
-        parser.addInstructionBuilder( "ACTIVATE", []( std::optional<std::string_view> flag, std::array<std::optional<u_int64_t>, 3> args){
+        parser.addInstructionBuilder( "ACTIVATE", []( std::optional<std::string_view> flag, std::array<std::optional<uint64_t>, 3> args){
             Instruction act;
             act.setOpcode( OPCODES::ACT );
             if ( !flag.has_value() ){
