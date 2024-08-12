@@ -17,6 +17,10 @@ namespace gemma {
         }
       }
 
+      bool is_comment( char c ) noexcept {
+        return c == ';';
+      }
+
       bool is_number( char c ) noexcept {
         return isdigit( c );
       }
@@ -56,7 +60,7 @@ namespace gemma {
           return Token( Token::Kind::NUMBER, begin, cursor );
         }
         // If it's a comment we simply skip 
-        if ( peek() == ';' ){
+        if ( is_comment( peek() ) ){
           while( peek() != '\n' ){ get(); }
           return next();
         }

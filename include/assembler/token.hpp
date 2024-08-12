@@ -5,8 +5,16 @@
 
 namespace gemma {
   namespace assembler  {
+    /**
+     * The is a portiong of string with a precise memaing, depending on the Kind
+     */
     class Token {
     public:
+      /**
+       * There are 5 types of tokens:
+       *  * UNKNOWN is used as fallback but should never occur
+       *  * END is used when the end of a string is reached
+       */
       enum Kind {
         UNKNOWN,
         MNEMONIC,
@@ -14,6 +22,10 @@ namespace gemma {
         FLAG,
         END
       };
+
+      /**
+       * Allows writing tokens to a stream for debug purspose
+       */
       friend std::ostream& operator<<(std::ostream &o, Kind k){
         switch (k){
           case Kind::UNKNOWN:
@@ -37,17 +49,30 @@ namespace gemma {
         return o;
       }
 
-      Token( Kind k ): kind( k ){};
-      Token( Kind k, const char* begin, size_t length): kind(k), lexeme(begin, length) {}
-      Token( Kind k, const char* begin, const char* end): kind(k), lexeme(begin, (std::string_view::size_type)std::distance(begin, end)) {}
-      
-      Kind getKind(){ return this->kind; }
-      Token setKind(Kind k){ this->kind = k; return *this; }
+      /**
+       * Create a new token. Once created it cannot be modified
+       */
+      Token( Kind k, const char* begin, size_t length) noexcept : kind(k), lexeme(begin, length) {}
 
-      std::string_view getLexeme(){ return this->lexeme; }
-      Token setLexeme( std::string_view l ){ this->lexeme = l; return *this; }
-      Token setLexeme( const char* begin, size_t length ){ this->lexeme = std::string_view(begin, length); return *this;}
-      Token setLexeme( const char* begin, const char* end){ this->lexeme = std::string_view(begin, (std::string_view::size_type)std::distance(begin, end)); return *this; }
+      /**
+       * Create a new token. Once created it cannot be modified
+       */
+      Token( Kind k, const char* begin, const char* end) noexcept: kind(k), lexeme(begin, (std::string_view::size_type)std::distance(begin, end)) {}
+      
+      /**
+       * Get the kind of the Token
+       * 
+       * @returns The kind of the token
+       */
+      [[ nodiscard ]] Kind getKind() const noexcept { return this->kind; }
+
+      /**
+       * Get the string to which is associated
+       * 
+       * @returns Get the string to which is associated
+       */
+      [[ nodiscard ]] std::string_view getLexeme() const noexcept { return this->lexeme; }
+
 
     private:
       Kind kind;

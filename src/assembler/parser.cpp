@@ -1,80 +1,48 @@
-#include <vector>
-#include <memory>
-#include "instructions.hpp"
 #include "assembler/parser.hpp"
-#include "assembler/instruction_builders.hpp"
+#include "instructions/instruction.hpp"
 
-namespace gemma{
-  namespace assembler {
-    std::vector<GemmaInstruction> Parser::parse(){
-      std::vector<GemmaInstruction> instructions;
-      Token token = lexer.next();
-      std::unique_ptr<GemmaInstructionBuilder> builder;
 
-      if ( token.getKind() != Token::Kind::MNEMONIC){
-        throw std::logic_error("The first token must be an instruction");
-      }
+[[ nodiscard ]] std::variant<std::vector<gemma::Instruction>, std::string> gemma::assembler::Parser::parse() noexcept {
+        std::vector<Instruction> result;
+        Token token = m_lexer.next();
+        
+        while( token.getKind() != Token::Kind::END ){
+          if ( token.getKind() != Token::Kind::MNEMONIC ){
+            std::string error { "Expected a menomic, got " };
+            error += token.getLexeme();
+            return std::variant<std::vector<Instruction>, std::string>{ error };
+          }
+          if ( !m_builders.contains( token.getLexeme().data() )){
+            std::string error { "Unknown mnemoic: " };
+            error += token.getLexeme();
+            return std::variant<std::vector<Instruction>, std::string>{ error };
+          }
+          token = m_lexer.next();
+          std::optional<std::string_view> flag;
+          std::array<std::optional<u_int64_t>, 3> options;
+           std::array<std::optional<u_int64_t>, 3>::size_type current_option_index = 0;
+          if ( token.getKind() == Token::Kind::FLAG){
+            flag = token.getLexeme();
+            token = m_lexer.next();
+          }
+          while ( token.getKind() == Token::Kind::NUMBER && current_option_index< 3 ) {
+            u_int64_t parse_result;
+            [[ maybe_unused ]]
+            auto [ptr, ec] = std::from_chars(token.getLexeme().begin(), token.getLexeme().end(), parse_result);
+            // TODO: add checks for conversion errors
+            options[current_option_index] = parse_result;
+            current_option_index++;
+          }
 
-      while( token.getKind() != Token::Kind::END ){
-        std::vector<Token> args;
-        if ( token.getKind() == Token::Kind::MNEMONIC ){
-          builder = getBuilder( token.getLexeme() );
-          token = lexer.next();
+          BuilderReturnType instruction = m_builders.find( token.getLexeme().data() )->second( flag, options );
+          if ( instruction.index() == 1 ){
+            std::string error { "Error while parsing " };
+            error += token.getLexeme();
+            error += ": ";
+            error += std::get<std::string>( instruction );
+            return std::variant<std::vector<Instruction>, std::string>{ error };
+          }
+          result.push_back( std::get<Instruction>( instruction ) );
         }
-        if ( token.getKind() == Token::Kind::FLAG){
-          args.push_back( token );
-          token = lexer.next();
-        }
-        if ( token.getKind() == Token::Kind::NUMBER ){
-          args.push_back( token );
-          token = lexer.next();
-        }
-        if ( token.getKind() == Token::Kind::NUMBER ){
-          args.push_back( token );
-          token = lexer.next();
-        }
-        if ( token.getKind() == Token::Kind::NUMBER ){
-          args.push_back( token );
-          token = lexer.next();
-        }
-        auto instruction_result = builder->build( args );
-        if ( instruction_result.is_ok() ){
-          instructions.push_back( instruction_result.ok_unchecked() );
-        } else {
-          throw std::domain_error("Cannot generate the assembly: " + instruction_result.err_unchecked() );
-        }
-      }
-      return instructions;
-    };
-
-    std::unique_ptr<GemmaInstructionBuilder> Parser::getBuilder( std::string_view menemonic){
-      if ( menemonic == "NOP" ){
-        std::unique_ptr<NopInstructionBuilder> builder ( new NopInstructionBuilder() ) ;
-        return builder;
-      } else if ( menemonic == "RHM") {
-        std::unique_ptr<ReadHostMemoryInstructionBuilder> builder ( new ReadHostMemoryInstructionBuilder() );
-        return builder;
-      } else if ( menemonic == "WHM" ){
-        std::unique_ptr<WriteHostMemoryInstructionBuilder> builder ( new WriteHostMemoryInstructionBuilder() );
-        return builder;
-      } else if ( menemonic == "MM" ){
-        std::unique_ptr<MatrixMultiplyInstructionBuilder> builder ( new MatrixMultiplyInstructionBuilder() );
-        return builder;
-      } else if ( menemonic == "ACT" ){
-        std::unique_ptr<ActivationInstructionBuilder> builder ( new ActivationInstructionBuilder() );
-        return builder;
-      } else if ( menemonic == "CON" ){
-        std::unique_ptr<ConfigureInstructionBuilder> builder ( new ConfigureInstructionBuilder() );
-        return builder;
-      } else if ( menemonic == "SYN" ){
-        std::unique_ptr<SyncInstructionBuilder> builder ( new SyncInstructionBuilder() );
-        return builder;
-      } else if ( menemonic == "HLT" ){
-        std::unique_ptr<HaltInstructionBuilder> builder ( new HaltInstructionBuilder() );
-        return builder;
-      } else {
-        throw std::domain_error( "Unknown Token" );
-      }
-    }
-  }
-} 
+        return result;
+}

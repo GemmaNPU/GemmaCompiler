@@ -20,18 +20,18 @@ FetchContent_Declare(
   FetchContent_MakeAvailable(argparse)
 
 #  generated using  `find . -type f -printf "%T@ %p\n" | sort -nr | cut -d\  -f2-`
-set( HPPS "${INCLUDE_PATH}/result.hpp"
-          "${INCLUDE_PATH}/assembler/assembler.hpp"
-          "${INCLUDE_PATH}/assembler/parser.hpp"
-          "${INCLUDE_PATH}/assembler/instruction_builders.hpp"
-          "${INCLUDE_PATH}/assembler/token.hpp"
+set( HPPS "${INCLUDE_PATH}/assembler/assembler.hpp"
+          "${INCLUDE_PATH}/assembler/instructions_set.hpp"
           "${INCLUDE_PATH}/assembler/lexer.hpp"
-          "${INCLUDE_PATH}/instructions.hpp" )
-set( CPPS "${SOURCE_PATH}/assembler/instruction_builders.cpp" 
-          "${SOURCE_PATH}/assembler/parser.cpp" 
+          "${INCLUDE_PATH}/assembler/parser.hpp"
+          "${INCLUDE_PATH}/assembler/token.hpp"
+          "${INCLUDE_PATH}/instructions/flag.hpp"
+          "${INCLUDE_PATH}/instructions/instruction.hpp"
+          "${INCLUDE_PATH}/instructions/opcodes.hpp" )
+set( CPPS "${SOURCE_PATH}/assembler/parser.cpp" 
           "${SOURCE_PATH}/assembler/lexer.cpp" 
           "${SOURCE_PATH}/assembler/assembler.cpp" 
-          "${SOURCE_PATH}/instructions.cpp" )
+           )
 file( GLOB_RECURSE TEST_CPPS "${TEST_PATH}/*.cpp" )
 
 if (DEFINED EMSCRIPTEN)

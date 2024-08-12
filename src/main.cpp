@@ -4,8 +4,8 @@
 #include <string>
 #include <fstream>
 #include <streambuf>
+
 #include "assembler/assembler.hpp"
-#include "instructions.hpp"
 
 int main( int argc, char *argv[] ){
   argparse::ArgumentParser program("gemmas");
@@ -42,16 +42,19 @@ int main( int argc, char *argv[] ){
 
   auto lexer = gemma::assembler::Lexer{ input_string.c_str() };
   auto parser = gemma::assembler::Parser{ lexer };
-
-  try {
-    auto instructions = parser.parse();
-    for( auto &i: instructions ){
-      gemma::fmt_instruction_raw( output_file, i);
-    }
-  } catch (...) {
-    std::cout << "An expected error occurred" << std::endl;
-    return 2;
+  auto assembler = gemma::assembler::Assembler{ parser };
+  assembler.loadInstructionSet<gemma::assembler::BaseInstructionSet>();
+  
+  auto instructions = assembler.assemble();
+  if ( instructions.index() == 1 ){
+    std::string error = std::get<std::string>( instructions );
+    std::cout << error << std::endl;
+    exit( 1 );
   }
+  for( auto &i: std::get<0>(instructions) ){
+    std::cout << i.getOpcode() << i.getFlag() << i.getLength() << i.getHostAddress() << i.getLocalAddress() << std::endl;
+  }
+
 
   return 0;
 }
