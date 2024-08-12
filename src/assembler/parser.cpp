@@ -30,7 +30,7 @@
           while ( token.getKind() == Token::Kind::NUMBER && current_option_index < 3 ) {
             uint64_t parse_result;
             [[ maybe_unused ]]
-            std::from_chars_result chars_result = std::from_chars(token.getLexeme().data(), token.getLexeme().end(), parse_result);
+            std::from_chars_result chars_result = std::from_chars(token.getLexeme().data(), token.getLexeme().data() + token.getLexeme().size(), parse_result);
             // TODO: add checks for conversion errors
             options[current_option_index] = parse_result;
             current_option_index++;
