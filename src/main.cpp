@@ -52,7 +52,7 @@ int main( int argc, char *argv[] ){
     exit( 1 );
   }
   for( auto &i: std::get<0>(instructions) ){
-    std::cout << i.getOpcode() << i.getFlag() << i.getLength() << i.getHostAddress() << i.getLocalAddress() << std::endl;
+    output_file << i.getOpcode() << i.getFlag() << i.getLength() << i.getHostAddress() << i.getLocalAddress();
   }
 
 

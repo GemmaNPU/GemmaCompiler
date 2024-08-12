@@ -5,17 +5,20 @@
 [[ nodiscard ]] std::variant<std::vector<gemma::Instruction>, std::string> gemma::assembler::Parser::parse() noexcept {
         std::vector<Instruction> result;
         Token token = m_lexer.next();
-        
+        Builder op_builder;
+
         while( token.getKind() != Token::Kind::END ){
           if ( token.getKind() != Token::Kind::MNEMONIC ){
             std::string error { "Expected a menomic, got " };
             error += token.getLexeme();
             return std::variant<std::vector<Instruction>, std::string>{ error };
           }
-          if ( !m_builders.contains( token.getLexeme().data() )){
-            std::string error { "Unknown mnemoic: " };
+          if ( !m_builders.contains( std::string{ token.getLexeme() } )){
+            std::string error { "Unknown mnemonic: " };
             error += token.getLexeme();
             return std::variant<std::vector<Instruction>, std::string>{ error };
+          } else {
+            op_builder = m_builders.find( std::string { token.getLexeme() } )->second;
           }
           token = m_lexer.next();
           std::optional<std::string_view> flag;
@@ -33,8 +36,7 @@
             options[current_option_index] = parse_result;
             current_option_index++;
           }
-
-          BuilderReturnType instruction = m_builders.find( token.getLexeme().data() )->second( flag, options );
+          BuilderReturnType instruction = op_builder( flag, options );
           if ( instruction.index() == 1 ){
             std::string error { "Error while parsing " };
             error += token.getLexeme();
