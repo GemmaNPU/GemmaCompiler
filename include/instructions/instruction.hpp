@@ -68,7 +68,7 @@ namespace gemma
     /**
      * The length of the instruction
      */
-    [[ nodiscard ]] std::bitset<LENGTH_SIZE> getLength() const noexcept { return m_flag; }
+    [[ nodiscard ]] std::bitset<LENGTH_SIZE> getLength() const noexcept { return m_length; }
     
     /**
      * The host address of the instruction

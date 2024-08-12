@@ -6,6 +6,9 @@
 #include <streambuf>
 
 #include "assembler/assembler.hpp"
+#include "instructions/opcodes.hpp"
+#include "instructions/instruction.hpp"
+#include "instructions/flag.hpp"
 
 int main( int argc, char *argv[] ){
   argparse::ArgumentParser program("gemmas");
@@ -52,7 +55,21 @@ int main( int argc, char *argv[] ){
     exit( 1 );
   }
   for( auto &i: std::get<0>(instructions) ){
-    output_file << i.getOpcode() << i.getFlag() << i.getLength() << i.getHostAddress() << i.getLocalAddress();
+    for( size_t j = ( gemma::OPCODE_SIZE / 8) - 1; j != SIZE_MAX; j-- ){
+      output_file << (char)((i.getOpcode() & ( std::bitset<gemma::OPCODE_SIZE>{ 0xff } << (j * 8))) >> (j * 8)).to_ulong();
+    }
+    for( size_t j = ( gemma::FLAG_SIZE / 8) - 1; j != SIZE_MAX; j-- ){
+      output_file << (char)((i.getFlag() & ( std::bitset<gemma::FLAG_SIZE>{ 0xff } << (j * 8))) >> (j * 8)).to_ulong();
+    }
+    for( size_t j = ( gemma::LENGTH_SIZE / 8) - 1; j != SIZE_MAX; j-- ){
+      output_file << (char)((i.getLength() & ( std::bitset<gemma::LENGTH_SIZE>{ 0xff } << (j * 8))) >> (j * 8)).to_ulong();
+    }
+    for( size_t j = ( gemma::HOST_ADDRESS_SIZE / 8) - 1; j != SIZE_MAX; j-- ){
+      output_file << (char)((i.getHostAddress() & ( std::bitset<gemma::HOST_ADDRESS_SIZE>{ 0xff } << (j * 8))) >> (j * 8)).to_ulong();
+    }
+    for( size_t j = ( gemma::LOCAL_ADDRESS_SIZE / 8) - 1; j != SIZE_MAX; j-- ){
+      output_file << (char)((i.getLocalAddress() & ( std::bitset<gemma::LOCAL_ADDRESS_SIZE>{ 0xff } << (j * 8))) >> (j * 8)).to_ulong();
+    }
   }
 
 

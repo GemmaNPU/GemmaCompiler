@@ -4,6 +4,7 @@
 #include <array>
 #include <variant>
 #include <cstring>
+#include <cstdint>
 
 #include "parser.hpp"
 #include "instructions/instruction.hpp"
