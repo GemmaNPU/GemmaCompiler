@@ -61,7 +61,7 @@ namespace gemma {
         }
         // If it's a comment we simply skip 
         if ( is_comment( peek() ) ){
-          while( peek() != '\n' ){ get(); }
+          while( peek() != '\n' && peek() != '\0' ){ get(); }
           return next();
         }
 

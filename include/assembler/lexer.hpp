@@ -9,7 +9,6 @@ namespace gemma {
      * so the next steps are easier to handle
      */
     class Lexer {
-    private:
       /**
        * Store the current position inside the string
        */

@@ -41,3 +41,25 @@ TEST(AssemblerLexerTest, CommasAsSpaces) {
     token_space = lexer_space.next();
   }
 }
+
+TEST(AssemblerLexerTest, Flags ){
+  std::string code  = "NOP.TEST, NOP.FLAG";
+  gemma::assembler::Lexer lexer { code.c_str() };
+  auto skip = lexer.next();
+  auto flag_test = lexer.next();
+  skip = lexer.next();
+  auto flag_flag = lexer.next();
+
+  ASSERT_EQ( flag_test.getKind(), gemma::assembler::Token::Kind::FLAG  );
+  ASSERT_EQ( flag_flag.getKind(), gemma::assembler::Token::Kind::FLAG  );
+}
+
+TEST( AssemblerLexerTest, Comments ){
+  std::string code_with_comments = "NOP ; line comment \n; comment in empty line";
+  gemma::assembler::Lexer lexer { code_with_comments.c_str() };
+  auto skip = lexer.next();
+  auto end = lexer.next();
+
+  ASSERT_EQ( skip.getKind(), gemma::assembler::Token::Kind::MNEMONIC );
+  ASSERT_EQ( end.getKind(), gemma::assembler::Token::Kind::END ); 
+}
