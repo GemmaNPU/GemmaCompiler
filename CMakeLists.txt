@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.20)
 project(gemmas)
 
 set( TARGET ${PROJECT_NAME} )
-set( TARGETLIB ${PROJECT_NAME}lib )
 set( TARGETWASM ${PROJECTNAME}wasm )
 set( TARGETTEST ${PROJECT_NAME}test )
 set( CMAKE_CXX_STANDARD 23)
@@ -20,32 +19,28 @@ FetchContent_Declare(
   FetchContent_MakeAvailable(argparse)
 
 #  generated using  `find . -type f -printf "%T@ %p\n" | sort -nr | cut -d\  -f2-`
-set( HPPS "${INCLUDE_PATH}/assembler/assembler.hpp"
-          "${INCLUDE_PATH}/assembler/instructions_set.hpp"
-          "${INCLUDE_PATH}/assembler/lexer.hpp"
-          "${INCLUDE_PATH}/assembler/parser.hpp"
-          "${INCLUDE_PATH}/assembler/token.hpp"
-          "${INCLUDE_PATH}/instructions/flag.hpp"
-          "${INCLUDE_PATH}/instructions/instruction.hpp"
-          "${INCLUDE_PATH}/instructions/opcodes.hpp" )
-set( CPPS "${SOURCE_PATH}/assembler/parser.cpp" 
-          "${SOURCE_PATH}/assembler/lexer.cpp" 
-          "${SOURCE_PATH}/assembler/assembler.cpp" 
+set( HPPS "${INCLUDE_PATH}/assembler/formatters/human_hex_formatter.hpp"
+          "${INCLUDE_PATH}/assembler/formatters/instruction_formatter.hpp"
+          "${INCLUDE_PATH}/assembler/instructions/definitions.hpp"
+          "${INCLUDE_PATH}/assembler/instructions/halt.hpp"
+          "${INCLUDE_PATH}/assembler/instructions/instructions_set.hpp"
+          "${INCLUDE_PATH}/assembler/instructions/nop.hpp"
+          "${INCLUDE_PATH}/assembler/assembler.hpp"
+          "${INCLUDE_PATH}/assembler/errors.hpp"
+          "${INCLUDE_PATH}/assembler/scanner.hpp"
            )
 file( GLOB_RECURSE TEST_CPPS "${TEST_PATH}/*.cpp" )
 
 if (DEFINED EMSCRIPTEN)
-  add_executable( ${TARGETWASM} ${SOURCE_PATH}/wasm.cpp ${INCLUDE_PATH}/wasm.hpp ${CPPS} )
+  add_executable( ${TARGETWASM} ${SOURCE_PATH}/wasm.cpp ${INCLUDE_PATH}/wasm.hpp)
   target_include_directories( ${TARGETWASM} PUBLIC ${INCLUDE_PATH} )
   set_target_properties( ${TARGETWASM} PROPERTIES COMPILE_FLAGS "-Os")
   set_target_properties( ${TARGETWASM} PROPERTIES LINK_FLAGS    "-Os --no-entry -s EXPORTED_RUNTIME_METHODS='[\"cwrap\", \"allocate\", \"intArrayFromString\"]'")
 else()
-  add_library(${TARGETLIB} SHARED ${CPPS} ${HPPS})
   add_executable( ${TARGET} src/main.cpp)
   add_executable( ${TARGETTEST} ${TEST_CPPS} )
   target_compile_features(${TARGET} PUBLIC cxx_std_23)
-  target_link_libraries( ${TARGETLIB} )
-  target_link_libraries( ${TARGET} argparse ${TARGETLIB} )
+  target_link_libraries( ${TARGET} argparse  )
   target_include_directories( ${TARGET} PUBLIC ${INCLUDE_PATH} )
   target_compile_options( ${TARGET} PRIVATE -Wall -Wextra -Wshadow -Wconversion -Wsign-conversion -Wunused-parameter -Wno-long-long -pedantic  -W -Wcast-qual -Wwrite-strings -Werror )
   install( 

@@ -78,3 +78,7 @@ global dict OPCODE2BIN.
 SRC/TAR takes 5B for memory operations to support at least 8GB addressing,
 3B for Unified Buffer addressing (96KB), 2B for accumulator buffer addressing
 (4K).
+
+
+
+https://github.com/SpintroniK/cpp_variant_experiments/blob/main/reduce_rose_tree2.cpp

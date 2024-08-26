@@ -1,59 +1,43 @@
-#pragma once
+#pragma once 
 
-#include <string>
-#include <variant>
-
-#include "assembler/lexer.hpp"
-#include "assembler/parser.hpp"
-#include "assembler/token.hpp"
-#include "assembler/instructions_set.hpp"
+#include <istream>
+#include <ostream>
+#include "assembler/instructions/instructions_set.hpp"
+#include "assembler/scanner.hpp"
 
 namespace gemma {
   namespace assembler {
+
     /**
-     * \brief The Assebler class is a wrapper around Lexer and Parser to automate all the process.
-     * 
-     * This is a helper around the parser. After constructiong with a parser you probably want to
-     * load an instruction set using `loadInstructionSet` method
+     * @brief Wrapper for the most useful operation of the assembler
      */
     class Assembler {
-      Parser parser;
     public:
-      /**
-       * Build an assembler with a specific parser. To change it later call `setParser`
-       */
-      Assembler( Parser p ): parser{ p } {};
-      
-      /**
-       * Automatically build an assembler with the given string as input.
-       * To actually run the assembly process call the method `assemble`.
-       */
-      explicit Assembler( const char* s ): parser{ Parser( Lexer( s )) } {};
 
       /**
-       * Extend the parser with a new instruction set. You probably want always to load the `BaseInstructionSet`,
-       * which contains all the standard instructions. To  extend the instruction set see the `BaseInstructionSet` class
+       * @brief Run the assembler in interactive mode, so it will wait for a string, parse if and write the result to the output stream. 
+       *        The only way to exit this loop is throug Ctrl-C
        */
-      template<typename InstructionSet>
-      void loadInstructionSet(){ InstructionSet::registerInstructions( parser ); }
-
-      /**
-       * Returns a reference to the parser in use
-       */
-      Parser& getParser(){ return this->parser; }
-      
-      /**
-       * Change the parser in use. The state of the parser is lost, so the assemly method will restart from  begin.
-       * You may want to change parser to run a different isntruction set and compare the results.
-       */
-      Assembler* setParser( Parser p ){ this->parser = p; return this; }
-
-      /**
-       * Run the assembler on the input string and return the list of instructions or a string explaining where an error occurred.
-       * 
-       * @returns A vector of instructions if everything went smooth, a string with the error reason otherwise
-       */
-      std::variant<std::vector<Instruction>, std::string> assemble( ){ return this->parser.parse(); }
+      template<typename Scanner, typename Formatter>
+      void interactive ( std::istream& input, std::ostream& output, std::string prompt = "[gemma assembler]>>> ") const noexcept {
+        std::string input_string;
+        while ( true ){
+          output << prompt;
+          std::getline( input, input_string );
+          Scanner scanner( input_string );
+          Formatter formatter{ output };
+          auto instruction = scanner.getNextInstruction();
+          if ( instruction.index() == 0 ){
+            if( std::get<0>( instruction ).has_value() ){
+              formatter.format( std::get<0>( instruction ).value() );
+            }
+          } else {
+            output << "Error: " << std::get<1>( instruction );
+            output << '\n';
+          }
+        }
+      }
     };
-  };
+
+  }
 }

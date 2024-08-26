@@ -69,7 +69,8 @@
     "thread": "cpp",
     "cinttypes": "cpp",
     "typeinfo": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "span": "cpp"
   },
   "C_Cpp.errorSquiggles": "enabled",
   "makefile.makefilePath": ""
